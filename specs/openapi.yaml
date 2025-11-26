@@ -1,0 +1,198 @@
+openapi: '3.0.3'
+
+info:
+  title: API Service for questions and answers
+  version: '1.0'
+
+servers:
+  - url: localhost:8080
+
+paths:
+  /questions:
+    get:
+      summary: Получение списка вопросов
+      responses:
+        200:
+          $ref: "#/components/responses/QuestionList"
+    post:
+      summary: Создание нового вопроса
+      requestBody:
+        $ref: "#/components/requestBodies/CreateQuestion"
+      responses:
+        201:
+          $ref: "#/components/responses/Question"
+
+  /questions/{id}:
+    get:
+      summary: Получение информации о вопросе и все ответы на него
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        200:
+          $ref: "#/components/responses/QuestionWithAnswers"
+    delete:
+      summary: Удаление вопроса
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        204:
+          description: Вопрос удален
+
+  /questions/{id}/answers:
+    post:
+      summary: Создание ответа на конкретный вопрос
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAnswer"
+      responses:
+        201:
+          $ref: "#/components/responses/Answer"
+  
+  /answers/{id}:
+    get:
+      summary: Получить конкретный ответ
+      parameters:
+        - $ref: "#/components/parameters/AnswerId"
+      responses:
+        200:
+          $ref: "#/components/responses/Answer"
+
+    delete:
+      summary: Удалить ответ
+      parameters:
+        - $ref: "#/components/parameters/AnswerId"
+      responses:
+        204:
+          description: Ответ удален
+
+components:
+  parameters:
+    QuestionId:
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: "#/components/schemas/QuestionId"
+    
+    AnswerId:
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: "#/components/schemas/AnswerId"
+  
+  schemas:
+    QuestionId:
+      type: string
+      format: uuid
+    AnswerId:
+      type: string
+      format: uuid
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    Answer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    QuestionWithAnswers:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Answer"
+
+  responses:
+    QuestionList:
+      description: Список вопросов
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ items ]
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+
+    Answer:
+      description: Информация об ответе
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Answer"
+
+    Question:
+      description: Информация о вопросе
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Question"
+
+    QuestionWithAnswers:
+      description: Информация о вопросе и его ответах
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/QuestionWithAnswers"
+
+  requestBodies:
+    CreateQuestion:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ text ]
+            properties:
+              text:
+                type: string
+
+    CreateAnswer:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ text ]
+            properties:
+              text:
+                type: string
+              user_id:
+                type: string
+                format: uuid
