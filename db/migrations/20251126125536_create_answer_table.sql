@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS answer(
+CREATE TABLE IF NOT EXISTS answers(
     id SERIAL PRIMARY KEY,
     question_id INTEGER NOT NULL,
     user_id VARCHAR(255) NOT NULL,
@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS answer(
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS answer;
+DROP TABLE IF EXISTS answers;
 -- +goose StatementEnd
