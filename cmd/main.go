@@ -23,9 +23,13 @@ func main() {
 		log.Fatalf("failed create gorm: %v", err)
 	}
 
-	repo := repository.NewQuestionRepository(db.DB)
-	service := service.NewQuestionService(repo)
-	handlers := handlers.NewQuestionHandler(service)
+	questionRepo := repository.NewQuestionRepository(db.DB)
+	answerRepo := repository.NewAnswerRepository(db.DB)
+
+	questionService := service.NewQuestionService(questionRepo, answerRepo)
+	//implement answer service
+
+	handlers := handlers.NewQuestionHandler(questionService)
 
 	srv := server.NewServer(srvCfg, handlers)
 

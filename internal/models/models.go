@@ -24,10 +24,5 @@ type DetailQuestion struct {
 	ID int `json:"id"`
 	Text string `json:"text"`
 	CreatedAt time.Time `json:"created_at"`
-	Answers struct {
-		ID int `json:"id"`
-		UserID string `json:"user_id"`
-		Text string `json:"string"`
-		CreatedAt time.Time `json:"created_at"`
-	} `json:"answers"`
+	Answers []Answer `json:"answers"`
 }

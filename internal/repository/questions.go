@@ -28,7 +28,7 @@ func (r *questionRepo) GetByID(ctx context.Context, id int) (*models.Question, e
 	err := r.db.WithContext(ctx).First(&question, id).Error
 
 	if err == gorm.ErrRecordNotFound {
-		return nil, nil
+		return nil, err
 	}
 
 	return &question, err

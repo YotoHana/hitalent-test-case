@@ -12,10 +12,13 @@ import (
 type QuestionService interface {
 	CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) error
 	GetAllQuestions(ctx context.Context) (*[]models.Question, error)
+	GetQuestionByID(ctx context.Context, id int) (*models.DetailQuestion, error)
+	DeleteQuestionByID(ctx context.Context, id int) error
 }
 
 type questionService struct {
 	questionRepo repository.QuestionRepository
+	answerRepo repository.AnswerRepository
 }
 
 func (s *questionService) CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) error {
@@ -45,6 +48,40 @@ func (s *questionService) GetAllQuestions(ctx context.Context) (*[]models.Questi
 	return questions, nil
 }
 
-func NewQuestionService(repo repository.QuestionRepository) QuestionService {
-	return &questionService{questionRepo: repo}
+func (s *questionService) GetQuestionByID(ctx context.Context, id int) (*models.DetailQuestion, error) {
+	question, err := s.questionRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	answers, err := s.answerRepo.GetByQuestionID(ctx, question.ID)
+	if err != nil {
+		return &models.DetailQuestion{
+			ID: question.ID,
+			Text: question.Text,
+			CreatedAt: question.CreatedAt,
+			Answers: nil,
+		}, err
+	}
+
+	return &models.DetailQuestion{
+		ID: question.ID,
+		Text: question.Text,
+		CreatedAt: question.CreatedAt,
+		Answers: *answers,
+	}, nil
+}
+
+func (s *questionService) DeleteQuestionByID(ctx context.Context, id int) error {
+	return s.questionRepo.Delete(ctx, id)
+}
+
+func NewQuestionService(
+	questionRepo repository.QuestionRepository,
+	answerRepo repository.AnswerRepository,
+	) QuestionService {
+	return &questionService{
+		questionRepo: questionRepo,
+		answerRepo: answerRepo,
+	}
 }

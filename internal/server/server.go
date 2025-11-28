@@ -28,6 +28,7 @@ func (s *Server) Stop(ctx context.Context) {
 
 func (s *Server) ImplementHandlers() {
 	s.mux.HandleFunc("/questions", s.handlers.Questions)
+	s.mux.HandleFunc("/questions/{id}", s.handlers.QuestionsID)
 }
 
 func NewServer(cfg *Config, handlers *handlers.QuestionHandler) *Server {
