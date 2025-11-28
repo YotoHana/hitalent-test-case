@@ -12,7 +12,7 @@ type Database struct {
 	db *gorm.DB
 }
 
-func NewGormDB(cfg Config) (*gorm.DB, error) {
+func NewDatabase(cfg *Config) (*Database, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.host,
@@ -37,7 +37,7 @@ func NewGormDB(cfg Config) (*gorm.DB, error) {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	return db, nil
+	return &Database{db: db}, nil
 }
 
 func (d *Database) Close() error {
