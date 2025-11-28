@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS answers(
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_question
         FOREIGN KEY (question_id)
-        REFERENCES question(id)
+        REFERENCES questions(id)
         ON DELETE CASCADE
 );
 -- +goose StatementEnd
