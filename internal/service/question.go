@@ -10,7 +10,7 @@ import (
 )
 
 type QuestionService interface {
-	CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) error
+	CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) (*models.Question, error)
 	GetAllQuestions(ctx context.Context) (*[]models.Question, error)
 	GetQuestionByID(ctx context.Context, id int) (*models.DetailQuestion, error)
 	DeleteQuestionByID(ctx context.Context, id int) error
@@ -21,9 +21,9 @@ type questionService struct {
 	answerRepo repository.AnswerRepository
 }
 
-func (s *questionService) CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) error {
+func (s *questionService) CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) (*models.Question, error) {
 	if len(req.Text) < 3 {
-		return errors.New("question text too short")
+		return nil, errors.New("question text too short")
 	}
 
 	question := models.Question{
@@ -33,10 +33,10 @@ func (s *questionService) CreateQuestion(ctx context.Context, req *models.Create
 
 	err := s.questionRepo.Create(ctx, &question)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &question, nil
 }
 
 func (s *questionService) GetAllQuestions(ctx context.Context) (*[]models.Question, error) {

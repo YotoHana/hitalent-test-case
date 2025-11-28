@@ -19,7 +19,7 @@ type questionRepo struct {
 }
 
 func (r *questionRepo) Create(ctx context.Context, q *models.Question) error {
-	return r.db.WithContext(ctx).Create(q).Error
+	return r.db.WithContext(ctx).Create(&q).Error
 }
 
 func (r *questionRepo) GetByID(ctx context.Context, id int) (*models.Question, error) {

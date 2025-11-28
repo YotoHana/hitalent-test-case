@@ -55,14 +55,15 @@ func (h *QuestionHandler) createQuestion(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := h.service.CreateQuestion(r.Context(), &req); err != nil {
+	result, err := h.service.CreateQuestion(r.Context(), &req)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode("Correct!")
+	json.NewEncoder(w).Encode(result)
 }
 
 func (h *QuestionHandler) getQuestionByID(w http.ResponseWriter, r *http.Request) {
