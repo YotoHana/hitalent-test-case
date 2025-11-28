@@ -1,4 +1,4 @@
-.PHONY: create-migration
+.PHONY: create-migration generate-models db-up db-down migrate-up migrate-down start run-server
 
 MIGRATIONS_DIR=./db/migrations
 DB_DSN="postgresql://dev:dev@localhost:5432/dev"
@@ -29,3 +29,6 @@ migrate-down:
 
 start: db-up migrate-up
 	@echo "База данных готова!"
+
+run-server:
+	go run ./cmd/main.go
