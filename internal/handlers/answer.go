@@ -35,11 +35,14 @@ func (h *AnswerHandler) createAnswer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.CreateAnswer(r.Context(), req, questionID); err != nil {
+	result, err := h.service.CreateAnswer(r.Context(), req, questionID)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(result)
 }
 
 func NewAnswerHandler(service service.AnswerService) *AnswerHandler {

@@ -10,16 +10,16 @@ import (
 )
 
 type AnswerService interface {
-	CreateAnswer(ctx context.Context, req models.CreateAnswerRequest, questionID int) error
+	CreateAnswer(ctx context.Context, req models.CreateAnswerRequest, questionID int) (*models.Answer, error)
 }
 
 type answerService struct {
 	answerRepo repository.AnswerRepository
 }
 
-func (s *answerService) CreateAnswer(ctx context.Context, req models.CreateAnswerRequest, questionID int,) error {
+func (s *answerService) CreateAnswer(ctx context.Context, req models.CreateAnswerRequest, questionID int,) (*models.Answer, error) {
 	if len(req.Text) < 3 {
-		return errors.New("answer text too short")
+		return nil, errors.New("answer text too short")
 	}
 
 	answer := models.Answer{
@@ -29,7 +29,11 @@ func (s *answerService) CreateAnswer(ctx context.Context, req models.CreateAnswe
 		CreatedAt: time.Now(),
 	}
 
-	return s.answerRepo.Create(ctx, &answer)
+	if err := s.answerRepo.Create(ctx, &answer); err != nil {
+		return nil, err
+	}
+
+	return &answer, nil
 }
 
 func NewAnswerService(answerRepo repository.AnswerRepository) AnswerService {
