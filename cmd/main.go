@@ -8,19 +8,28 @@ import (
 	"syscall"
 
 	"github.com/YotoHana/hitalent-test-case/internal/database"
+	"github.com/YotoHana/hitalent-test-case/internal/handlers"
+	"github.com/YotoHana/hitalent-test-case/internal/repository"
 	"github.com/YotoHana/hitalent-test-case/internal/server"
+	"github.com/YotoHana/hitalent-test-case/internal/service"
 )
 
 func main() {
 	srvCfg := server.DefaultConfig()
 	dbCfg := database.DefaultConfig()
 
-	srv := server.NewServer(srvCfg)
 	db, err := database.NewDatabase(dbCfg)
 	if err != nil {
 		log.Fatalf("failed create gorm: %v", err)
 	}
-	
+
+	repo := repository.NewQuestionRepository(db.DB)
+	service := service.NewQuestionService(repo)
+	handlers := handlers.NewQuestionHandler(service)
+
+	srv := server.NewServer(srvCfg, handlers)
+
+	srv.ImplementHandlers()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)

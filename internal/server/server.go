@@ -3,11 +3,14 @@ package server
 import (
 	"context"
 	"net/http"
+
+	"github.com/YotoHana/hitalent-test-case/internal/handlers"
 )
 
 type Server struct {
 	httpServer *http.Server
 	mux *http.ServeMux
+	handlers *handlers.QuestionHandler
 }
 
 func (s *Server) Start() error {
@@ -23,7 +26,11 @@ func (s *Server) Stop(ctx context.Context) {
 	s.httpServer.Shutdown(ctx)
 }
 
-func NewServer(cfg *Config) *Server {
+func (s *Server) ImplementHandlers() {
+	s.mux.HandleFunc("/questions", s.handlers.Questions)
+}
+
+func NewServer(cfg *Config, handlers *handlers.QuestionHandler) *Server {
 	mux := http.NewServeMux()
 
 	return &Server{
@@ -35,5 +42,6 @@ func NewServer(cfg *Config) *Server {
 			WriteTimeout: cfg.writeTimeout,
 			IdleTimeout: cfg.idleTimeout,
 		},
+		handlers: handlers,
 	}
 }

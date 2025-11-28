@@ -9,7 +9,7 @@ import (
 )
 
 type Database struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 func NewDatabase(cfg *Config) (*Database, error) {
@@ -37,11 +37,11 @@ func NewDatabase(cfg *Config) (*Database, error) {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	return &Database{db: db}, nil
+	return &Database{DB: db}, nil
 }
 
 func (d *Database) Close() error {
-	sqlDB, err := d.db.DB()
+	sqlDB, err := d.DB.DB()
 	if err != nil {
 		return err
 	}

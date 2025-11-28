@@ -2,11 +2,11 @@ package database
 
 const (
 	defaultHost = "localhost"
-	defaultPort = ":5432"
+	defaultPort = "5432"
 	defaultUser = "dev"
 	defaultPassword = "dev"
 	defaultDBName = "dev"
-	defaultSSLMode = "false"
+	defaultSSLMode = "disable"
 )
 
 type Config struct {
