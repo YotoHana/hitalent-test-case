@@ -8,9 +8,10 @@ import (
 )
 
 type Server struct {
-	httpServer *http.Server
-	mux *http.ServeMux
-	handlers *handlers.QuestionHandler
+	httpServer       *http.Server
+	mux              *http.ServeMux
+	questionHandlers *handlers.QuestionHandler
+	answerHandlers   *handlers.AnswerHandler
 }
 
 func (s *Server) Start() error {
@@ -27,22 +28,28 @@ func (s *Server) Stop(ctx context.Context) {
 }
 
 func (s *Server) ImplementHandlers() {
-	s.mux.HandleFunc("/questions", s.handlers.Questions)
-	s.mux.HandleFunc("/questions/{id}", s.handlers.QuestionsID)
+	s.mux.HandleFunc("/questions", s.questionHandlers.Questions)
+	s.mux.HandleFunc("/questions/{id}", s.questionHandlers.QuestionsID)
+	s.mux.HandleFunc("/questions/{id}/answers", s.answerHandlers.QuestionsIDAnswers)
 }
 
-func NewServer(cfg *Config, handlers *handlers.QuestionHandler) *Server {
+func NewServer(
+	cfg *Config,
+	questionHandlers *handlers.QuestionHandler,
+	answerHandlers *handlers.AnswerHandler,
+) *Server {
 	mux := http.NewServeMux()
 
 	return &Server{
 		mux: mux,
 		httpServer: &http.Server{
-			Addr: cfg.host + cfg.port,
-			Handler: mux,
-			ReadTimeout: cfg.readTimeout,
+			Addr:         cfg.host + cfg.port,
+			Handler:      mux,
+			ReadTimeout:  cfg.readTimeout,
 			WriteTimeout: cfg.writeTimeout,
-			IdleTimeout: cfg.idleTimeout,
+			IdleTimeout:  cfg.idleTimeout,
 		},
-		handlers: handlers,
+		questionHandlers: questionHandlers,
+		answerHandlers:   answerHandlers,
 	}
 }

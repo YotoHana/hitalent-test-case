@@ -26,3 +26,8 @@ type DetailQuestion struct {
 	CreatedAt time.Time `json:"created_at"`
 	Answers []Answer `json:"answers"`
 }
+
+type CreateAnswerRequest struct {
+	Text string `json:"text"`
+	UserID string `json:"user_id"`
+}

@@ -27,24 +27,25 @@ func main() {
 	answerRepo := repository.NewAnswerRepository(db.DB)
 
 	questionService := service.NewQuestionService(questionRepo, answerRepo)
-	//implement answer service
+	answerService := service.NewAnswerService(answerRepo)
 
-	handlers := handlers.NewQuestionHandler(questionService)
+	questionHandlers := handlers.NewQuestionHandler(questionService)
+	answerHandlers := handlers.NewAnswerHandler(answerService)
 
-	srv := server.NewServer(srvCfg, handlers)
+	srv := server.NewServer(srvCfg, questionHandlers, answerHandlers)
 
 	srv.ImplementHandlers()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	go func ()  {
+	go func() {
 		if err := srv.Start(); err != nil {
 			log.Fatalf("failed start server: %v", err)
 		}
 	}()
 
-	<- sigChan
+	<-sigChan
 
 	srv.Stop(context.Background())
 	db.Close()
