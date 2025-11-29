@@ -10,7 +10,7 @@ import (
 type AnswerRepository interface {
 	Create(ctx context.Context, q *models.Answer) error
 	GetByQuestionID(ctx context.Context, questionID int) (*[]models.Answer, error)
-	GetAll(ctx context.Context) (*[]models.Answer, error)
+	GetByID(ctx context.Context, id int) (*models.Answer, error)
 	Delete(ctx context.Context, id int) error
 }
 
@@ -34,12 +34,15 @@ func (r *answerRepo) GetByQuestionID(ctx context.Context, questionID int) (*[]mo
 	return &answers, err
 }
 
-func (r *answerRepo) GetAll(ctx context.Context) (*[]models.Answer, error) {
-	var answers []models.Answer
+func (r *answerRepo) GetByID(ctx context.Context, id int) (*models.Answer, error) {
+	var answer models.Answer
+	err := r.db.WithContext(ctx).First(&answer, id).Error
 
-	err := r.db.WithContext(ctx).Order("created_at DESC").Find(&answers).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
+	}
 
-	return &answers, err
+	return &answer, err
 }
 
 func (r *answerRepo) Delete(ctx context.Context, id int) error {

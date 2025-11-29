@@ -31,6 +31,7 @@ func (s *Server) ImplementHandlers() {
 	s.mux.HandleFunc("/questions", s.questionHandlers.Questions)
 	s.mux.HandleFunc("/questions/{id}", s.questionHandlers.QuestionsID)
 	s.mux.HandleFunc("/questions/{id}/answers", s.answerHandlers.QuestionsIDAnswers)
+	s.mux.HandleFunc("/answers/{id}", s.answerHandlers.AnswersID)
 }
 
 func NewServer(

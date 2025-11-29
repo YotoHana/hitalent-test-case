@@ -11,6 +11,8 @@ import (
 
 type AnswerService interface {
 	CreateAnswer(ctx context.Context, req models.CreateAnswerRequest, questionID int) (*models.Answer, error)
+	GetAnswer(ctx context.Context, id int) (*models.Answer, error)
+	DeleteAnswer(ctx context.Context, id int) error
 }
 
 type answerService struct {
@@ -34,6 +36,23 @@ func (s *answerService) CreateAnswer(ctx context.Context, req models.CreateAnswe
 	}
 
 	return &answer, nil
+}
+
+func (s *answerService) GetAnswer(ctx context.Context, id int) (*models.Answer, error) {
+	answer, err := s.answerRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return answer, nil
+}
+
+func (s *answerService) DeleteAnswer(ctx context.Context, id int) error {
+	if err := s.answerRepo.Delete(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewAnswerService(answerRepo repository.AnswerRepository) AnswerService {
