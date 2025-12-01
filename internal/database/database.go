@@ -14,16 +14,16 @@ type Database struct {
 
 func NewDatabase(cfg *Config) (*Database, error) {
 	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.host,
-		cfg.port,
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.user,
 		cfg.password,
+		cfg.host,
+		cfg.port,
 		cfg.dbName,
 		cfg.sslMode,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn))
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

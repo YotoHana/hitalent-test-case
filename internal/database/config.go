@@ -1,7 +1,7 @@
 package database
 
 const (
-	defaultHost = "localhost"
+	defaultHost = "db"
 	defaultPort = "5432"
 	defaultUser = "dev"
 	defaultPassword = "dev"
