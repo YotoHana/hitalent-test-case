@@ -1,4 +1,4 @@
-.PHONY: create-migration generate-models db-up db-down migrate-up migrate-down start run-server
+.PHONY: create-migration generate-models db-up db-down migrate-up migrate-down start stop docker-build
 
 MIGRATIONS_DIR=./db/migrations
 DB_DSN="postgresql://dev:dev@localhost:5432/dev"
@@ -8,18 +8,16 @@ create-migration:
 	@read MIGRATION_NAME; \
 	goose -dir $(MIGRATIONS_DIR) create $$MIGRATION_NAME sql
 
-generate-models:
-	oapi-codegen -package models -generate types -o internal/models/models.gen.go specs/openapi.yaml
+docker-compose-build:
+	docker-compose build --no-cache
 
-db-up:
+docker-compose-up:
 	docker-compose up -d
-	@echo "Ожидание запуска PostgreSQL..."
-	@sleep 3
+	@sleep 2
 
-db-down:
-	docker-compose down
-	@echo "Ожидание остановки PostgreSQL..."
-	@sleep 3
+docker-compose-down:
+	docker-compose down -v
+	@sleep 2
 
 migrate-up:
 	goose -dir $(MIGRATIONS_DIR) postgres $(DB_DSN) up
@@ -27,8 +25,14 @@ migrate-up:
 migrate-down:
 	goose -dir $(MIGRATIONS_DIR) postgres "$(DB_DSN)" down
 
-start: db-up migrate-up
-	@echo "База данных готова!"
+start: docker-compose-build docker-compose-up migrate-up
+	@echo "Сервис запущен!"
 
-run-server:
-	go run ./cmd/main.go
+stop: docker-compose-down
+	@echo "Сервис остановлен!"
+
+restart: docker-compose-down docker-compose-up migrate-up
+	@echo "Сервис перезапущен!"
+
+docker-build:
+	docker build -t api-question-service -f Dockerfile .
