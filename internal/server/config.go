@@ -3,7 +3,7 @@ package server
 import "time"
 
 const (
-	defaultHost = "localhost"
+	defaultHost = "0.0.0.0"
 	defaultPort = ":8080"
 	defaultIdleTimeout = time.Second * 120
 	defaultReadTimeout = time.Second * 10
