@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/YotoHana/hitalent-test-case/internal/config"
 	"github.com/YotoHana/hitalent-test-case/internal/database"
 	"github.com/YotoHana/hitalent-test-case/internal/handlers"
 	"github.com/YotoHana/hitalent-test-case/internal/repository"
@@ -15,14 +16,16 @@ import (
 )
 
 func main() {
-	srvCfg := server.DefaultConfig()
-	dbCfg := database.DefaultConfig()
+	config, err := config.Load("./")
+	if err != nil {
+		log.Fatalf("failed to load config: %v", err)
+	}
 
-	db, err := database.NewDatabase(dbCfg)
+	db, err := database.NewDatabase(&config.Database)
 	if err != nil {
 		log.Fatalf("failed create gorm: %v", err)
 	}
-	log.Println("connect to database")
+	log.Printf("connect to database: %s", config.Database.DSN())
 
 	questionRepo := repository.NewQuestionRepository(db.DB)
 	answerRepo := repository.NewAnswerRepository(db.DB)
@@ -33,13 +36,14 @@ func main() {
 	questionHandlers := handlers.NewQuestionHandler(questionService)
 	answerHandlers := handlers.NewAnswerHandler(answerService)
 
-	srv := server.NewServer(srvCfg, questionHandlers, answerHandlers)
+	srv := server.NewServer(&config.Server, questionHandlers, answerHandlers)
 
 	srv.ImplementHandlers()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
+	log.Printf("starting server on: %s", config.Server.Address())
 	go func() {
 		if err := srv.Start(); err != nil {
 			log.Fatalf("failed start server: %v", err)

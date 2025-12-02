@@ -1,29 +1,18 @@
 package server
 
-import "time"
-
-const (
-	defaultHost = "0.0.0.0"
-	defaultPort = ":8080"
-	defaultIdleTimeout = time.Second * 120
-	defaultReadTimeout = time.Second * 10
-	defaultWriteTimeout = time.Second * 10
+import (
+	"fmt"
+	"time"
 )
 
 type Config struct {
-	host string
-	port string
-	idleTimeout time.Duration
-	readTimeout time.Duration
-	writeTimeout time.Duration
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
+	IdleTimeout time.Duration `mapstructure:"idle_timeout"`
+	ReadTimeout time.Duration `mapstructure:"read_timeout"`
+	WriteTimeout time.Duration `mapstructure:"write_timeout"`
 }
 
-func DefaultConfig() *Config {
-	return &Config{
-		host: defaultHost,
-		port: defaultPort,
-		idleTimeout: defaultIdleTimeout,
-		readTimeout: defaultReadTimeout,
-		writeTimeout: defaultWriteTimeout,
-	}
+func (c *Config) Address() string {
+	return fmt.Sprintf("%s:%s", c.Host, c.Port)
 }

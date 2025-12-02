@@ -13,7 +13,7 @@ FROM alpine:latest
 
 WORKDIR /root/
 
-COPY --from=builder /api-service .
+COPY --from=builder /api-service /app/config.yaml ./
 
 EXPOSE 8080
 

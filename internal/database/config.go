@@ -1,30 +1,24 @@
 package database
 
-const (
-	defaultHost = "db"
-	defaultPort = "5432"
-	defaultUser = "dev"
-	defaultPassword = "dev"
-	defaultDBName = "dev"
-	defaultSSLMode = "disable"
-)
+import "fmt"
 
 type Config struct {
-	host string
-	port string
-	user string
-	password string
-	dbName string
-	sslMode string
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
+	User string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	DBName string `mapstructure:"db_name"`
+	SSLMode string `mapstructure:"ssl_mode"`
 }
 
-func DefaultConfig() *Config {
-	return &Config{
-		host: defaultHost,
-		port: defaultPort,
-		user: defaultUser,
-		password: defaultPassword,
-		dbName: defaultDBName,
-		sslMode: defaultSSLMode,
-	}
+func (c *Config) DSN() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		c.User,
+		c.Password,
+		c.Host,
+		c.Port,
+		c.DBName,
+		c.SSLMode,
+	)
 }

@@ -46,11 +46,11 @@ func NewServer(
 	return &Server{
 		mux: mux,
 		httpServer: &http.Server{
-			Addr:         cfg.host + cfg.port,
+			Addr:         cfg.Host + ":" + cfg.Port,
 			Handler:      mux,
-			ReadTimeout:  cfg.readTimeout,
-			WriteTimeout: cfg.writeTimeout,
-			IdleTimeout:  cfg.idleTimeout,
+			ReadTimeout:  cfg.ReadTimeout,
+			WriteTimeout: cfg.WriteTimeout,
+			IdleTimeout:  cfg.IdleTimeout,
 		},
 		questionHandlers: questionHandlers,
 		answerHandlers:   answerHandlers,
