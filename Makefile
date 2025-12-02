@@ -51,6 +51,8 @@ test:
 test-cover:	
 	go test ./internal/service -cover
 
+#------------FORMAT------------
+
 fmt:
 	go fmt ./cmd/
 	go fmt ./internal/config/
