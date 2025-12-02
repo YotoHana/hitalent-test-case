@@ -50,3 +50,13 @@ test:
 
 test-cover:	
 	go test ./internal/service -cover
+
+fmt:
+	go fmt ./cmd/
+	go fmt ./internal/config/
+	go fmt ./internal/database/
+	go fmt ./internal/handlers/
+	go fmt ./internal/models/
+	go fmt ./internal/repository/
+	go fmt ./internal/server/
+	go fmt ./internal/service/
