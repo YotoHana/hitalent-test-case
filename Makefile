@@ -1,4 +1,4 @@
-.PHONY: create-migration generate-models db-up db-down migrate-up migrate-down start stop docker-build
+.PHONY: create-migration migrate-up migrate-down docker-compose-build docker-compose-up docker-compose-down docker-build start stop restart test test-cover
 
 MIGRATIONS_DIR=./db/migrations
 DB_DSN="postgresql://dev:dev@localhost:5432/dev"
@@ -42,3 +42,11 @@ stop: docker-compose-down
 
 restart: docker-compose-down docker-compose-up migrate-up
 	@echo "Сервис перезапущен!"
+
+#------------TESTS------------
+
+test:
+	go test ./internal/service -v
+
+test-cover:	
+	go test ./internal/service -cover
