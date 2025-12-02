@@ -161,9 +161,9 @@ curl -X POST http://localhost:8080/api/v1/answers \
 
 ```bash
 # Запуск и остановка
-make start              # Полный запуск (сборка + запуск + миграции)
-make stop               # Остановка всех сервисов
-make restart            # Перезапуск без пересборки
+make start                   # Полный запуск (сборка + запуск + миграции)
+make stop                    # Остановка всех сервисов
+make restart                 # Перезапуск без пересборки
 
 # Docker
 make docker-compose-build    # Пересобрать образы
@@ -171,13 +171,16 @@ make docker-compose-up       # Запустить контейнеры
 make docker-compose-down     # Остановить и удалить контейнеры
 
 # Миграции
-make create-migration   # Создать новую миграцию
-make migrate-up         # Применить миграции
-make migrate-down       # Откатить последнюю миграцию
+make create-migration        # Создать новую миграцию
+make migrate-up              # Применить миграции
+make migrate-down            # Откатить последнюю миграцию
 
 # Тестирование
-make test               # Запустить тесты
-make test-cover         # Запустить тесты с покрытием
+make test                    # Запустить тесты
+make test-cover              # Запустить тесты с покрытием
+
+# Форматирование
+make fmt                     # Форматировать Go-файлы
 ```
 
 ### Создание новой миграции
