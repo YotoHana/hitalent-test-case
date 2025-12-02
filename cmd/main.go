@@ -22,6 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed create gorm: %v", err)
 	}
+	log.Println("connect to database")
 
 	questionRepo := repository.NewQuestionRepository(db.DB)
 	answerRepo := repository.NewAnswerRepository(db.DB)
@@ -47,6 +48,11 @@ func main() {
 
 	<-sigChan
 
+	log.Println("shutting down server...")
 	srv.Stop(context.Background())
+
+	log.Println("close database connect...")
 	db.Close()
+
+	log.Println("Shutdown complete")
 }

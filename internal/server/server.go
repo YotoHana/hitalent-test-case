@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/YotoHana/hitalent-test-case/internal/handlers"
@@ -19,6 +20,7 @@ func (s *Server) Start() error {
 	if err != nil {
 		return err
 	}
+	log.Printf("Start server on %s", s.httpServer.Addr)
 
 	return nil
 }
