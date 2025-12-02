@@ -18,7 +18,7 @@ type QuestionService interface {
 
 type questionService struct {
 	questionRepo repository.QuestionRepository
-	answerRepo repository.AnswerRepository
+	answerRepo   repository.AnswerRepository
 }
 
 func (s *questionService) CreateQuestion(ctx context.Context, req *models.CreateQuestionRequest) (*models.Question, error) {
@@ -27,7 +27,7 @@ func (s *questionService) CreateQuestion(ctx context.Context, req *models.Create
 	}
 
 	question := models.Question{
-		Text: req.Text,
+		Text:      req.Text,
 		CreatedAt: time.Now(),
 	}
 
@@ -57,18 +57,18 @@ func (s *questionService) GetQuestionByID(ctx context.Context, id int) (*models.
 	answers, err := s.answerRepo.GetByQuestionID(ctx, question.ID)
 	if err != nil {
 		return &models.DetailQuestion{
-			ID: question.ID,
-			Text: question.Text,
+			ID:        question.ID,
+			Text:      question.Text,
 			CreatedAt: question.CreatedAt,
-			Answers: nil,
+			Answers:   nil,
 		}, err
 	}
 
 	return &models.DetailQuestion{
-		ID: question.ID,
-		Text: question.Text,
+		ID:        question.ID,
+		Text:      question.Text,
 		CreatedAt: question.CreatedAt,
-		Answers: *answers,
+		Answers:   *answers,
 	}, nil
 }
 
@@ -79,9 +79,9 @@ func (s *questionService) DeleteQuestionByID(ctx context.Context, id int) error 
 func NewQuestionService(
 	questionRepo repository.QuestionRepository,
 	answerRepo repository.AnswerRepository,
-	) QuestionService {
+) QuestionService {
 	return &questionService{
 		questionRepo: questionRepo,
-		answerRepo: answerRepo,
+		answerRepo:   answerRepo,
 	}
 }

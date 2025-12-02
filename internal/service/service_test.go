@@ -128,32 +128,32 @@ func TestGetQuestionByID_Success(t *testing.T) {
 
 	expectedAnswers := &[]models.Answer{
 		{
-			ID: 1,
+			ID:         1,
 			QuestionID: questionID,
-			UserID: "good user",
-			Text: "It`s so good",
-			CreatedAt: time.Now(),
+			UserID:     "good user",
+			Text:       "It`s so good",
+			CreatedAt:  time.Now(),
 		},
 		{
-			ID: 2,
+			ID:         2,
 			QuestionID: questionID,
-			UserID: "bad user",
-			Text: "It`s so bad",
-			CreatedAt: time.Now(),
+			UserID:     "bad user",
+			Text:       "It`s so bad",
+			CreatedAt:  time.Now(),
 		},
 	}
 
 	expectedQuestion := &models.Question{
-		ID: questionID,
-		Text: "What is unit testing?",
+		ID:        questionID,
+		Text:      "What is unit testing?",
 		CreatedAt: time.Now(),
 	}
 
 	expectedDetailQuestion := &models.DetailQuestion{
-		ID: expectedQuestion.ID,
-		Text: expectedQuestion.Text,
+		ID:        expectedQuestion.ID,
+		Text:      expectedQuestion.Text,
 		CreatedAt: expectedQuestion.CreatedAt,
-		Answers: *expectedAnswers,
+		Answers:   *expectedAnswers,
 	}
 
 	mockQuestionRepo.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(expectedQuestion, nil)
@@ -202,8 +202,8 @@ func TestGetByQuestionID_NoAnswers(t *testing.T) {
 	questionID := 1
 
 	expectedQuestion := &models.Question{
-		ID: questionID,
-		Text: "What is unit testing?",
+		ID:        questionID,
+		Text:      "What is unit testing?",
 		CreatedAt: time.Now(),
 	}
 
@@ -218,7 +218,7 @@ func TestGetByQuestionID_NoAnswers(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.Nil(t, result.Answers)
 	assert.Equal(t, errorNoAnswers, err)
-	
+
 	mockQuestionRepo.AssertExpectations(t)
 	mockAnswerRepo.AssertExpectations(t)
 }
@@ -230,7 +230,7 @@ func TestCreateAnswer_Success(t *testing.T) {
 
 	ctx := context.Background()
 	req := models.CreateAnswerRequest{
-		Text: "Unit testing best",
+		Text:   "Unit testing best",
 		UserID: "user1",
 	}
 	questionID := 1
@@ -256,7 +256,7 @@ func TestCreateAnswer_TextTooShort(t *testing.T) {
 	ctx := context.Background()
 	req := models.CreateAnswerRequest{
 		UserID: "user1",
-		Text: "Y",
+		Text:   "Y",
 	}
 	questionID := 1
 
@@ -277,7 +277,7 @@ func TestCreateAnswer_NotFound(t *testing.T) {
 	ctx := context.Background()
 	req := models.CreateAnswerRequest{
 		UserID: "user1",
-		Text: "Unit testing best",
+		Text:   "Unit testing best",
 	}
 	questionID := 1
 

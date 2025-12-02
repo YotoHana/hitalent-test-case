@@ -13,7 +13,7 @@ const (
 )
 
 type Config struct {
-	Server server.Config `mapstructure:"server"`
+	Server   server.Config   `mapstructure:"server"`
 	Database database.Config `mapstructure:"database"`
 }
 
